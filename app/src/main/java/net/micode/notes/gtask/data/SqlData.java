@@ -34,17 +34,18 @@ import net.micode.notes.gtask.exception.ActionFailureException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 public class SqlData {
-    private static final String TAG = SqlData.class.getSimpleName();
+    private static final String TAG = SqlData.class.getSimpleName(); //定义一个值为sqlData底层类的标签
 
-    private static final int INVALID_ID = -99999;
+    private static final int INVALID_ID = -99999; //定义不合法id值
 
+    // 建立一个静态的String类型的包含数据信息的数组
     public static final String[] PROJECTION_DATA = new String[] {
             DataColumns.ID, DataColumns.MIME_TYPE, DataColumns.CONTENT, DataColumns.DATA1,
             DataColumns.DATA3
     };
 
+    // 对数据的属性使用int型的数字代替
     public static final int DATA_ID_COLUMN = 0;
 
     public static final int DATA_MIME_TYPE_COLUMN = 1;
@@ -55,8 +56,10 @@ public class SqlData {
 
     public static final int DATA_CONTENT_DATA_3_COLUMN = 4;
 
+    //实体化一个ContentResolver对象，进行必要的数据操作
     private ContentResolver mContentResolver;
 
+    //声明一系列标记变量
     private boolean mIsCreate;
 
     private long mDataId;
@@ -69,8 +72,10 @@ public class SqlData {
 
     private String mDataContentData3;
 
+    //实体化一个ContentValues对象用于存储数据
     private ContentValues mDiffDataValues;
 
+    //
     public SqlData(Context context) {
         mContentResolver = context.getContentResolver();
         mIsCreate = true;
@@ -82,6 +87,7 @@ public class SqlData {
         mDiffDataValues = new ContentValues();
     }
 
+    //
     public SqlData(Context context, Cursor c) {
         mContentResolver = context.getContentResolver();
         mIsCreate = false;
@@ -89,6 +95,11 @@ public class SqlData {
         mDiffDataValues = new ContentValues();
     }
 
+
+    /**根据游标C加载数据
+     *
+     * @param c 数据库游标
+     */
     private void loadFromCursor(Cursor c) {
         mDataId = c.getLong(DATA_ID_COLUMN);
         mDataMimeType = c.getString(DATA_MIME_TYPE_COLUMN);
@@ -97,6 +108,11 @@ public class SqlData {
         mDataContentData3 = c.getString(DATA_CONTENT_DATA_3_COLUMN);
     }
 
+    /**设置数据内容 mDataId、mDataMimeType、mDataContent、mDataContentData1、mDataContentData3
+     *
+     * @param js JSONObject
+     * @throws JSONException json异常
+     */
     public void setContent(JSONObject js) throws JSONException {
         long dataId = js.has(DataColumns.ID) ? js.getLong(DataColumns.ID) : INVALID_ID;
         if (mIsCreate || mDataId != dataId) {
@@ -130,6 +146,11 @@ public class SqlData {
         mDataContentData3 = dataContentData3;
     }
 
+    /**将数据封装成json对象并返回
+     *
+     * @return json对象
+     * @throws JSONException json异常
+     */
     public JSONObject getContent() throws JSONException {
         if (mIsCreate) {
             Log.e(TAG, "it seems that we haven't created this in database yet");
@@ -144,6 +165,12 @@ public class SqlData {
         return js;
     }
 
+    /**提交保存note
+     *
+     * @param noteId 便签id
+     * @param validateVersion 版本是否合法
+     * @param version 版本
+     */
     public void commit(long noteId, boolean validateVersion, long version) {
 
         if (mIsCreate) {
@@ -183,6 +210,9 @@ public class SqlData {
         mIsCreate = false;
     }
 
+    /**返回便签id
+     * @return mData long
+     */
     public long getId() {
         return mDataId;
     }
