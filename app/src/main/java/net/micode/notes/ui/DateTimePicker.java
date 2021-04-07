@@ -28,6 +28,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 
+/**
+ * ui时间控件，用于时间的获取、更新(年月日时分秒，以及12小时制与24小时制）
+ */
 public class DateTimePicker extends FrameLayout {
 
     private static final boolean DEFAULT_ENABLE_STATE = true;
