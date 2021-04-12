@@ -179,6 +179,7 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         }
     }
 
+    // 初始化Activity状态
     private boolean initActivityState(Intent intent) {
         /**
          * If the user specified the {@link Intent#ACTION_VIEW} but not provided with id,
