@@ -33,8 +33,9 @@ import org.json.JSONObject;
 
 
 public class Task extends Node {
+    //获取任务的名称并定义，取名
     private static final String TAG = Task.class.getSimpleName();
-
+    //定义任务所需参数
     private boolean mCompleted;
 
     private String mNotes;
@@ -44,7 +45,7 @@ public class Task extends Node {
     private Task mPriorSibling;
 
     private TaskList mParent;
-
+    //新建任务，并初始化所有参数取假或空
     public Task() {
         super();
         mCompleted = false;
@@ -53,22 +54,22 @@ public class Task extends Node {
         mParent = null;
         mMetaInfo = null;
     }
-
+    //定义创建活动为JSONObject类型，便于转换字符串
     public JSONObject getCreateAction(int actionId) {
         JSONObject js = new JSONObject();
-
+        //为json对象添加元素
         try {
-            // action_type
+            // 动作类型
             js.put(GTaskStringUtils.GTASK_JSON_ACTION_TYPE,
                     GTaskStringUtils.GTASK_JSON_ACTION_TYPE_CREATE);
 
-            // action_id
+            // 操作id
             js.put(GTaskStringUtils.GTASK_JSON_ACTION_ID, actionId);
 
-            // index
+            // 指数
             js.put(GTaskStringUtils.GTASK_JSON_INDEX, mParent.getChildTaskIndex(this));
 
-            // entity_delta
+            // 三角洲实体
             JSONObject entity = new JSONObject();
             entity.put(GTaskStringUtils.GTASK_JSON_NAME, getName());
             entity.put(GTaskStringUtils.GTASK_JSON_CREATOR_ID, "null");
@@ -79,21 +80,21 @@ public class Task extends Node {
             }
             js.put(GTaskStringUtils.GTASK_JSON_ENTITY_DELTA, entity);
 
-            // parent_id
+            // 父项id
             js.put(GTaskStringUtils.GTASK_JSON_PARENT_ID, mParent.getGid());
 
-            // dest_parent_type
+            //目标的父项类型
             js.put(GTaskStringUtils.GTASK_JSON_DEST_PARENT_TYPE,
                     GTaskStringUtils.GTASK_JSON_TYPE_GROUP);
 
-            // list_id
+            // 列表id
             js.put(GTaskStringUtils.GTASK_JSON_LIST_ID, mParent.getGid());
 
-            // prior_sibling_id
+            // 上一个兄弟姐妹id
             if (mPriorSibling != null) {
                 js.put(GTaskStringUtils.GTASK_JSON_PRIOR_SIBLING_ID, mPriorSibling.getGid());
             }
-
+        //抛出异常，无以上元素
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
             e.printStackTrace();
@@ -102,22 +103,22 @@ public class Task extends Node {
 
         return js;
     }
-
+    //定义JSONObject类型的更新活动
     public JSONObject getUpdateAction(int actionId) {
         JSONObject js = new JSONObject();
 
         try {
-            // action_type
+            // 动作类型
             js.put(GTaskStringUtils.GTASK_JSON_ACTION_TYPE,
                     GTaskStringUtils.GTASK_JSON_ACTION_TYPE_UPDATE);
 
-            // action_id
+            // 操作id
             js.put(GTaskStringUtils.GTASK_JSON_ACTION_ID, actionId);
 
             // id
             js.put(GTaskStringUtils.GTASK_JSON_ID, getGid());
 
-            // entity_delta
+            // 三角洲实体
             JSONObject entity = new JSONObject();
             entity.put(GTaskStringUtils.GTASK_JSON_NAME, getName());
             if (getNotes() != null) {
@@ -125,7 +126,7 @@ public class Task extends Node {
             }
             entity.put(GTaskStringUtils.GTASK_JSON_DELETED, getDeleted());
             js.put(GTaskStringUtils.GTASK_JSON_ENTITY_DELTA, entity);
-
+        //抛出异常
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
             e.printStackTrace();
@@ -134,7 +135,7 @@ public class Task extends Node {
 
         return js;
     }
-
+    //通过RemoteJSON设置内容
     public void setContentByRemoteJSON(JSONObject js) {
         if (js != null) {
             try {
@@ -143,27 +144,27 @@ public class Task extends Node {
                     setGid(js.getString(GTaskStringUtils.GTASK_JSON_ID));
                 }
 
-                // last_modified
+                // 上次修改
                 if (js.has(GTaskStringUtils.GTASK_JSON_LAST_MODIFIED)) {
                     setLastModified(js.getLong(GTaskStringUtils.GTASK_JSON_LAST_MODIFIED));
                 }
 
-                // name
+                // 名字
                 if (js.has(GTaskStringUtils.GTASK_JSON_NAME)) {
                     setName(js.getString(GTaskStringUtils.GTASK_JSON_NAME));
                 }
 
-                // notes
+                // 笔记
                 if (js.has(GTaskStringUtils.GTASK_JSON_NOTES)) {
                     setNotes(js.getString(GTaskStringUtils.GTASK_JSON_NOTES));
                 }
 
-                // deleted
+                // 删除
                 if (js.has(GTaskStringUtils.GTASK_JSON_DELETED)) {
                     setDeleted(js.getBoolean(GTaskStringUtils.GTASK_JSON_DELETED));
                 }
 
-                // completed
+                // 完整性
                 if (js.has(GTaskStringUtils.GTASK_JSON_COMPLETED)) {
                     setCompleted(js.getBoolean(GTaskStringUtils.GTASK_JSON_COMPLETED));
                 }
@@ -174,7 +175,7 @@ public class Task extends Node {
             }
         }
     }
-
+//通过LocalJSON设置内容
     public void setContentByLocalJSON(JSONObject js) {
         if (js == null || !js.has(GTaskStringUtils.META_HEAD_NOTE)
                 || !js.has(GTaskStringUtils.META_HEAD_DATA)) {
