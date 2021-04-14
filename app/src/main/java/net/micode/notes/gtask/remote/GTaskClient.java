@@ -90,6 +90,7 @@ public class GTaskClient {
 
     private JSONArray mUpdateArray;
 
+    //线程数据设置
     private GTaskClient() {
         mHttpClient = null;
         mGetUrl = GTASK_GET_URL;
@@ -102,6 +103,11 @@ public class GTaskClient {
         mUpdateArray = null;
     }
 
+    /**
+     * 静态数据生成
+     * 初始化GtaskClient
+     * @return mInstance
+     */
     public static synchronized GTaskClient getInstance() {
         if (mInstance == null) {
             mInstance = new GTaskClient();
@@ -109,6 +115,13 @@ public class GTaskClient {
         return mInstance;
     }
 
+    /**
+     * 小米便签用户登陆
+     * 传入一个activity，判断是否登录成功
+     * 将登陆情况存入日志
+     * @param activity
+     * @return true or false
+     */
     public boolean login(Activity activity) {
         // we suppose that the cookie would expire after 5 minutes
         // then we need to re-login
@@ -164,6 +177,14 @@ public class GTaskClient {
         return true;
     }
 
+    /**
+     * Google账号登陆逻辑处理：
+     * 找到name对应的Acount，通过账户找到用户token
+     * 每个环节进行日志记录
+     * @param activity 通过此传入账户管理类accountManager
+     * @param invalidateToken 判断token是否合法
+     * @return authToken 用户Token
+     */
     private String loginGoogleAccount(Activity activity, boolean invalidateToken) {
         String authToken;
         AccountManager accountManager = AccountManager.get(activity);
@@ -207,6 +228,14 @@ public class GTaskClient {
         return authToken;
     }
 
+    /**
+     * 尝试登陆Gtask
+     * 更新用户token，判断是否能够登陆Gtask
+     * 日志记录
+     * @param activity
+     * @param authToken
+     * @return
+     */
     private boolean tryToLoginGtask(Activity activity, String authToken) {
         if (!loginGtask(authToken)) {
             // maybe the auth token is out of date, now let's invalidate the
@@ -225,6 +254,12 @@ public class GTaskClient {
         return true;
     }
 
+    /**
+     * Gtask登陆逻辑处理
+     * 日志记录
+     * @param authToken 通过用户token生成 loginUrl
+     * @return true or false 是否登录成功
+     */
     private boolean loginGtask(String authToken) {
         int timeoutConnection = 10000;
         int timeoutSocket = 15000;
@@ -280,10 +315,18 @@ public class GTaskClient {
         return true;
     }
 
+    /**
+     *
+     * @return mActionId 返回ActionId
+     */
     private int getActionId() {
         return mActionId++;
     }
 
+    /**
+     * 创建一个Post请求对象
+     * @return 返回Post请求对象
+     */
     private HttpPost createHttpPost() {
         HttpPost httpPost = new HttpPost(mPostUrl);
         httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -291,6 +334,14 @@ public class GTaskClient {
         return httpPost;
     }
 
+    /**
+     * 获取响应内容
+     * ①获取编码方式，日志记录
+     * ②获取响应的具体内容并读入
+     * @param entity
+     * @return
+     * @throws IOException
+     */
     private String getResponseContent(HttpEntity entity) throws IOException {
         String contentEncoding = null;
         if (entity.getContentEncoding() != null) {
