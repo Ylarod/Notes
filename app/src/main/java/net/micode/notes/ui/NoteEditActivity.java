@@ -234,7 +234,7 @@ public class NoteEditActivity extends Activity implements OnClickListener,
                 }
                 long noteId = 0;
                 if ((noteId = DataUtils.getNoteIdByPhoneNumberAndCallDate(getContentResolver(),
-                        phoneNumber, callDate)) > 0) {
+0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000                        phoneNumber, callDate)) > 0) {
                     mWorkingNote = WorkingNote.load(this, noteId);
                     if (mWorkingNote == null) {
                         Log.e(TAG, "load call note failed with note id" + noteId);
